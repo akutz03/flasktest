@@ -2,9 +2,9 @@ from flask import Flask, render_template, url_for, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
-db = SQLAlchemy(app)
+application = Flask(__name__)
+application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+db = SQLAlchemy(application)
 
 
 class Todo(db.Model):
@@ -17,7 +17,7 @@ class Todo(db.Model):
         return '<Task %r>' % self.id
 
 
-@app.route("/", methods=['POST', 'GET'])
+@application.route("/", methods=['POST', 'GET'])
 def index():
     if request.method == 'POST':
         task_content = request.form['content']
@@ -34,7 +34,7 @@ def index():
         return render_template('index.html', tasks=tasks)
 
 
-@app.route('/delete/<int:id>')
+@application.route('/delete/<int:id>')
 def delete(id):
     task_to_delete = Todo.query.get_or_404(id)
 
@@ -46,7 +46,7 @@ def delete(id):
         return 'Error encountered in delete'
 
 
-@app.route('/update/<int:id>', methods=['GET', 'POST'])
+@application.route('/update/<int:id>', methods=['GET', 'POST'])
 def update(id):
     task = Todo.query.get_or_404(id)
 
